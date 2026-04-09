@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         TELEGRAM_BOT_TOKEN = credentials('bot-token')
-        TELEGRAM_CHAT_ID = '123456789'
+        TELEGRAM_CHAT_ID = '5854378525'
     }
 
     stages {
@@ -11,6 +11,7 @@ pipeline {
         stage('Build Laravel') {
             steps {
                 sh '''
+                cd my-laravel-app
                 composer install --no-dev --optimize-autoloader
                 npm install
                 npm run build
