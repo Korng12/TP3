@@ -1,0 +1,10 @@
+pipeline{
+    agent {laravel-agent}
+    stages{
+        stage('Build'){
+            steps{
+                echo 'Building'
+            }
+        }
+    }
+}
