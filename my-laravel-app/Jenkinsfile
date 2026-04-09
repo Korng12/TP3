@@ -24,7 +24,7 @@ pipeline {
                 sshagent(['server-ssh-key']) {
                     sh '''
                     cd ansible
-                    ansible-playbook -i inventory.ini deploy.yml
+                    ansible-playbook -i inventory.ini playbook.yml
                     '''
                 }
             }
