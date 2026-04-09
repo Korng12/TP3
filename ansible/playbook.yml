@@ -1,4 +1,4 @@
-- name: laravel project delployment
+- name: Laravel project deployment
   hosts: webservers
   gather_facts: no
   become: yes
@@ -11,14 +11,17 @@
         owner: www-data
         group: www-data
         mode: '0755'
+
     - name: Copy project files to server
       synchronize:
-        src: ../my-laravel-app/ # Copies everything from the Jenkins workspace
+        src: ../my-laravel-app/
         dest: /var/www/Chantha_Mengkong/
+        delete: yes
         rsync_opts:
           - "--exclude=.git"
           - "--exclude=ansible"
           - "--exclude=node_modules"
+
     - name: Set correct permissions for Laravel storage/cache
       file:
         path: "/var/www/Chantha_Mengkong/{{ item }}"
@@ -30,3 +33,23 @@
       loop:
         - storage
         - bootstrap/cache
+
+    - name: Install composer dependencies
+      command: composer install --no-dev --optimize-autoloader
+      args:
+        chdir: /var/www/Chantha_Mengkong
+
+    - name: Generate app key
+      command: php artisan key:generate
+      args:
+        chdir: /var/www/Chantha_Mengkong
+
+    - name: Run migrations
+      command: php artisan migrate --force
+      args:
+        chdir: /var/www/Chantha_Mengkong
+
+    - name: Cache config
+      command: php artisan config:cache
+      args:
+        chdir: /var/www/Chantha_Mengkong

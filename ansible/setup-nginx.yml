@@ -1,40 +1,49 @@
----
-# setup-server.yml
 - name: Provision Web Server
   hosts: webservers
   become: yes
+
   tasks:
-    - name: Install Nginx
+    - name: Install Nginx + PHP
       apt:
-        name: nginx
+        name:
+          - nginx
+          - php-fpm
+          - php-cli
+          - php-mbstring
+          - php-xml
+          - php-curl
+          - php-zip
+          - php-mysql
         state: present
         update_cache: yes
 
-    - name: Install PHP-FPM
-      apt:
-        name: php-fpm
-        state: present
-
-    - name: Ensure Nginx is running and starts on boot
+    - name: Ensure Nginx is running
       service:
         name: nginx
         state: started
         enabled: yes
-    - name: Push Nginx configuration file to server
-      copy:
-        src: nginx.conf # Grabs the file from your Jenkins workspace
-        dest: /etc/nginx/sites-available/Chantha_Mengkong
-        owner: root
-        group: root
-        mode: '0644'
 
-    - name: Enable the Nginx site (Create Symlink)
+    - name: Push Nginx config
+      copy:
+        src: nginx.conf
+        dest: /etc/nginx/sites-available/Chantha_Mengkong
+
+    - name: Enable site
       file:
         src: /etc/nginx/sites-available/Chantha_Mengkong
         dest: /etc/nginx/sites-enabled/Chantha_Mengkong
         state: link
+        force: yes
 
-    - name: Restart Nginx to apply changes
-      systemd:
+    - name: Remove default site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Test nginx config
+      command: nginx -t
+
+    - name: Reload nginx
+      service:
         name: nginx
-        state: restarted
+        state: reloaded
