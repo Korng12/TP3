@@ -1,0 +1,32 @@
+- name: laravel project delployment
+  hosts: webservers
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - name: Ensure target directory exists
+      file:
+        path: /var/www/Chantha_Mengkong
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+    - name: Copy project files to server
+      synchronize:
+        src: ../ # Copies everything from the Jenkins workspace
+        dest: /var/www/Chantha_Mengkong/
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=ansible"
+          - "--exclude=node_modules"
+    - name: Set correct permissions for Laravel storage/cache
+      file:
+        path: "/var/www/Chantha_Mengkong/{{ item }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0775'
+        recurse: yes
+      loop:
+        - storage
+        - bootstrap/cache
