@@ -13,7 +13,7 @@
         mode: '0755'
     - name: Copy project files to server
       synchronize:
-        src: ../ # Copies everything from the Jenkins workspace
+        src: ../my-laravel-app/ # Copies everything from the Jenkins workspace
         dest: /var/www/Chantha_Mengkong/
         rsync_opts:
           - "--exclude=.git"
