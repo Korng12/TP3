@@ -38,7 +38,18 @@
       command: composer install --no-dev --optimize-autoloader
       args:
         chdir: /var/www/Chantha_Mengkong
+    - name: Create .env file
+      template:
+        src: .env.j2
+        dest: /var/www/Chantha_Mengkong/.env
 
+    - name: Create sqlite database file
+      file:
+        path: /var/www/Chantha_Mengkong/database/database.sqlite
+        state: touch
+        owner: www-data
+        group: www-data
+        mode: '0664'
     - name: Generate app key
       command: php artisan key:generate
       args:
