@@ -34,10 +34,10 @@
         - storage
         - bootstrap/cache
 
-    - name: Install composer dependencies
-      command: composer install --no-dev --optimize-autoloader
-      args:
-        chdir: /var/www/Chantha_Mengkong
+    # - name: Install composer dependencies
+    #   command: composer install --no-dev --optimize-autoloader
+    #   args:
+    #     chdir: /var/www/Chantha_Mengkong
     - name: Create .env file
       template:
         src: .env.j2
