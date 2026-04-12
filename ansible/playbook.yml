@@ -53,3 +53,4 @@
       command: php artisan config:cache
       args:
         chdir: /var/www/Chantha_Mengkong
+    
